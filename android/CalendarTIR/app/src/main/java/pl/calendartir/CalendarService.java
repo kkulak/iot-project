@@ -33,6 +33,7 @@ public class CalendarService extends Service {
 
     private List<EventInfo> mEventsCoffeeList = new ArrayList<>();
 
+
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
@@ -47,27 +48,34 @@ public class CalendarService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         int command = super.onStartCommand(intent, flags, startId);
-
-        // Get all coffee events
-        java.util.Calendar calendar = java.util.Calendar.getInstance();
-        Date now = calendar.getTime();
-        calendar.add(java.util.Calendar.DATE, 7);
-        Date future = calendar.getTime();
-
-        Calendar[] calendarList = CalendarUtility.getGoogleCalendars(this, "ddmajda@gmail.com");
-
-        for (Calendar cal : calendarList) {
-            ArrayList<Event> events = EventUtility.getEvents(this, cal.id);
-            Event event = events.get(0);
-            if (event.title.equals("[Kawa]")) {
-                Log.d("[KAWA]", event.toString());
-            }
-        }
-
-//        List<CalendarInfo> calendars = CalendarInfo.getAllCalendars(this);
-//        List<EventInfo> list= EventInfo.getEvents(this, now, future, cal)
-//        mEventsCoffeeList.clear();
 //
+//        // Prepare dates
+//        java.util.Calendar calendar = java.util.Calendar.getInstance();
+//        Date now = calendar.getTime();
+//        calendar.add(java.util.Calendar.DATE, 7);
+//        Date future = calendar.getTime();
+//
+        // Get alarm manager
+        String alarm = Context.ALARM_SERVICE;
+        AlarmManager alarmManager = (AlarmManager) getSystemService(alarm);
+//
+//        // Cancel old intents
+//        for (int i = 0; i<mEventsCoffeeList.size(); i++) {
+//            EventInfo event = mEventsCoffeeList.get(i);
+//            Intent coffeeIntent = new Intent(getString(R.string.coffe_broadcast));
+//            PendingIntent pi = PendingIntent.getBroadcast(this, i, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//            pi.cancel();
+//            alarmManager.cancel(pi);
+//        }
+//
+//        // Construct new event list
+//        List<CalendarInfo> calendars = CalendarInfo.getAllCalendars(this);
+//        List<Integer> calendarsId = new ArrayList<>();
+//        for (CalendarInfo cal : calendars) {
+//            calendarsId.add(cal.getId().intValue());
+//        }
+//        List<EventInfo> list = EventInfo.getEvents(this, now, future, calendarsId, null);
+//        mEventsCoffeeList.clear();
 //
 //        for (EventInfo event : list) {
 //            long diff = event.getStartDate().getTime() - now.getTime();
@@ -76,21 +84,26 @@ public class CalendarService extends Service {
 //                mEventsCoffeeList.add(event);
 //            }
 //        }
-//
-//        // Get alarm manager
-//        String alarm = Context.ALARM_SERVICE;
-//        AlarmManager am = (AlarmManager) getSystemService( alarm );
-//
-//        Intent coffeeIntent = new Intent(getString(R.string.coffe_broadcast));
-//        PendingIntent pi = PendingIntent.getBroadcast(this, 0, intent, 0);
-//
-//        int type = AlarmManager.ELAPSED_REALTIME_WAKEUP;
-//        long interval = AlarmManager.INTERVAL_FIFTEEN_MINUTES;
-//        long triggerTime = SystemClock.elapsedRealtime() + interval;
-//
-//        for (EventInfo event : mEventsCoffeeList) {
-////            am.setExact(AlarmManager.RTC_WAKEUP, );
+
+        // Create intents and start them
+        Intent coffeeIntent = new Intent(this, CoffeeBroadcast.class);
+        PendingIntent pi = PendingIntent.getBroadcast(this, 0, coffeeIntent, PendingIntent.FLAG_UPDATE_CURRENT);;
+
+//        for (int i = 0; i<mEventsCoffeeList.size(); i++) {
+//            EventInfo event = mEventsCoffeeList.get(i);
+//            PendingIntent piNew = PendingIntent.getBroadcast(this, i, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//            alarmManager.set(AlarmManager.RTC_WAKEUP, event.getStartDate().getTime(), piNew);
 //        }
+// get a Calendar object with current time
+
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        // add 30 seconds to the calendar object
+        cal.add(java.util.Calendar.SECOND, 5);
+
+        // Get the AlarmManager servic
+        alarmManager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pi);
+
+
 
         return command;
     }
