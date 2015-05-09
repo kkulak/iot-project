@@ -54,7 +54,7 @@ public class MainActivity extends ActionBarActivity  {
             @Override
             public void onClick(View v) {
                 mCoffeeListView.setAdapter(
-                        new EventsAdapter(MainActivity.this, mServer.getmEventsCoffeeList()));
+                        new EventsAdapter(MainActivity.this, mServer.getEventsCoffeeList()));
             }
         });
 

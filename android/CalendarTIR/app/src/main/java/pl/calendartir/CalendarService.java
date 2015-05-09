@@ -3,11 +3,14 @@ package pl.calendartir;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.SystemClock;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.darkrockstudios.libs.calendar.Calendar;
@@ -33,7 +36,6 @@ public class CalendarService extends Service {
 
     private List<EventInfo> mEventsCoffeeList = new ArrayList<>();
 
-
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
@@ -48,6 +50,30 @@ public class CalendarService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         int command = super.onStartCommand(intent, flags, startId);
+
+        updateList();
+
+        return command;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+    }
+
+    public List<EventInfo> getEventsCoffeeList() {
+        // Update before returning
+        updateList();
+
+        // Return coffee list
+        return mEventsCoffeeList;
+    }
+
+    /**
+     * Gets events from calendar, then cancel all pending intents (if any).
+     * After this makes new pending intents with events from calendar.
+     */
+    private void updateList() {
 
         // Prepare dates
         java.util.Calendar calendar = java.util.Calendar.getInstance();
@@ -94,21 +120,5 @@ public class CalendarService extends Service {
             PendingIntent piNew = PendingIntent.getBroadcast(this, i, coffeeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             alarmManager.set(AlarmManager.RTC_WAKEUP, event.getStartDate().getTime(), piNew);
         }
-
-
-
-
-
-        return command;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-    }
-
-    public List<EventInfo> getmEventsCoffeeList() {
-        return mEventsCoffeeList;
     }
 }

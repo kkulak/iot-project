@@ -8,6 +8,10 @@ import android.util.Log;
  */
 public class CoffeHelper {
 
+    /**
+     * Sends info to Gallileo to make coffee.
+     * @param context Context, required for network connections
+     */
     public static void makeCoffe(Context context) {
         Log.d("Coffee", "Making coffee");
         // TODO make coffe

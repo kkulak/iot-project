@@ -1,21 +1,18 @@
 package pl.calendartir;
 
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.Toast;
 
 /**
- * Created by dominikmajda on 03.05.15.
+ * Created by dominikmajda on 09.05.15.
  */
-public class CoffeeBroadcast extends BroadcastReceiver{
-
+public class CatchChangesReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        // Coffee from calendar received, make coffee!
-        CoffeHelper.makeCoffe(context);
+        Intent intentService = new Intent(context, CalendarService.class);
+        context.startService(intentService);
     }
 }
