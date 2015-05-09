@@ -35,7 +35,7 @@ public class MainActivity extends ActionBarActivity  {
 
     private ListView mCoffeeListView;
 
-    private Button mRefreshButton;
+    private Button mRefreshButton, mMakeCoffeeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +47,7 @@ public class MainActivity extends ActionBarActivity  {
 
         mCoffeeListView = (ListView)findViewById(R.id.coffee_lv);
         mRefreshButton = (Button)findViewById(R.id.refresh_button);
+        mMakeCoffeeButton = (Button)findViewById(R.id.make_coffe_button);
 
 
         mRefreshButton.setOnClickListener(new View.OnClickListener() {
@@ -54,6 +55,13 @@ public class MainActivity extends ActionBarActivity  {
             public void onClick(View v) {
                 mCoffeeListView.setAdapter(
                         new EventsAdapter(MainActivity.this, mServer.getmEventsCoffeeList()));
+            }
+        });
+
+        mMakeCoffeeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CoffeHelper.makeCoffe(MainActivity.this);
             }
         });
     }
