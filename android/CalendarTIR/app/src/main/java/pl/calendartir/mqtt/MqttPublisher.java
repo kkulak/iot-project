@@ -14,13 +14,13 @@ public class MqttPublisher {
     private String on = "1";
     private String off = "0";
     private String broker = "tcp://iot.eclipse.org:1883";
-    private MemoryPersistence persistence = new MemoryPersistence();
     MqttClient sampleClient;
     MqttConnectOptions connOpts;
 
     public MqttPublisher() {
         try {
             String clientId = "IoT";
+            MemoryPersistence persistence = new MemoryPersistence();
             this.sampleClient = new MqttClient(broker, clientId, persistence);
             connOpts = new MqttConnectOptions();
             connOpts.setCleanSession(true);
