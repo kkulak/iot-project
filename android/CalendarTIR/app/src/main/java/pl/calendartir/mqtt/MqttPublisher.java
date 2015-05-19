@@ -10,7 +10,7 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 public class MqttPublisher {
 
-    private final String led1Topic = "api/led1";
+    private final String led1Topic = "/api/led1";
     private String on = "1";
     private String off = "0";
     private String broker = "tcp://iot.eclipse.org:1883";
